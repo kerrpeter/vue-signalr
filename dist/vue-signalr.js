@@ -1,58 +1,58 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _getOwnPropertyNames = require('babel-runtime/core-js/object/get-own-property-names');
+var _getOwnPropertyNames = require("babel-runtime/core-js/object/get-own-property-names");
 
 var _getOwnPropertyNames2 = _interopRequireDefault(_getOwnPropertyNames);
 
-var _defineProperties = require('babel-runtime/core-js/object/define-properties');
+var _defineProperties = require("babel-runtime/core-js/object/define-properties");
 
 var _defineProperties2 = _interopRequireDefault(_defineProperties);
 
-var _promise = require('babel-runtime/core-js/promise');
+var _promise = require("babel-runtime/core-js/promise");
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
+var _toConsumableArray2 = require("babel-runtime/helpers/toConsumableArray");
 
 var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
 
-var _assign = require('babel-runtime/core-js/object/assign');
+var _assign = require("babel-runtime/core-js/object/assign");
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _regenerator = require('babel-runtime/regenerator');
+var _regenerator = require("babel-runtime/regenerator");
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
-var _asyncToGenerator2 = require('babel-runtime/helpers/asyncToGenerator');
+var _asyncToGenerator2 = require("babel-runtime/helpers/asyncToGenerator");
 
 var _asyncToGenerator3 = _interopRequireDefault(_asyncToGenerator2);
 
-var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = require('babel-runtime/helpers/createClass');
+var _createClass2 = require("babel-runtime/helpers/createClass");
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-var _inherits2 = require('babel-runtime/helpers/inherits');
+var _inherits2 = require("babel-runtime/helpers/inherits");
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _signalr = require('@microsoft/signalr');
+var _signalr = require("@microsoft/signalr");
 
 var SignalR = _interopRequireWildcard(_signalr);
 
@@ -60,7 +60,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var EventEmitter = require('events');
+var EventEmitter = require("events");
 
 var defaultOptions = {
   log: false
@@ -74,7 +74,8 @@ var SocketConnection = function (_EventEmitter) {
 
     var _this = (0, _possibleConstructorReturn3.default)(this, (SocketConnection.__proto__ || (0, _getPrototypeOf2.default)(SocketConnection)).call(this));
 
-    _this.connection = connection;
+    _this.connectionUrl = connection;
+    _this.authToken = null;
     _this.listened = [];
     _this.socket = false;
 
@@ -86,24 +87,24 @@ var SocketConnection = function (_EventEmitter) {
   }
 
   (0, _createClass3.default)(SocketConnection, [{
-    key: '_initialize',
+    key: "_initialize",
     value: function () {
       var _ref = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
         var _this2 = this;
 
-        var connection = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+        var connection = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
         var con, socket;
         return _regenerator2.default.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                con = connection || this.connection;
+                con = connection || this.connectionUrl + "?authorization=" + this.authToken;
                 _context2.prev = 1;
                 socket = new SignalR.HubConnectionBuilder().withUrl(con).withAutomaticReconnect().build();
 
 
                 socket.connection.onclose = function () {
-                  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(error) {
+                  var _ref2 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee(_error) {
                     return _regenerator2.default.wrap(function _callee$(_context) {
                       while (1) {
                         switch (_context.prev = _context.next) {
@@ -113,7 +114,7 @@ var SocketConnection = function (_EventEmitter) {
                               break;
                             }
 
-                            if (_this2.options.log) console.log('Reconnecting...');
+                            if (_this2.options.log) console.log("Reconnecting...");
 
                             _this2.socket = false;
                             /* eslint-disable no-underscore-dangle */
@@ -121,10 +122,10 @@ var SocketConnection = function (_EventEmitter) {
                             return _this2._initialize(con);
 
                           case 5:
-                            _this2.emit('reconnect');
+                            _this2.emit("reconnect");
 
                           case 6:
-                          case 'end':
+                          case "end":
                             return _context.stop();
                         }
                       }
@@ -143,13 +144,13 @@ var SocketConnection = function (_EventEmitter) {
 
                 this.socket = socket;
                 this._isMounted = true;
-                this.emit('init');
+                this.emit("init");
                 _context2.next = 15;
                 break;
 
               case 11:
                 _context2.prev = 11;
-                _context2.t0 = _context2['catch'](1);
+                _context2.t0 = _context2["catch"](1);
 
                 if (this.options.log) console.log("Error: ", _context2.t0, "Reconnecting...");
 
@@ -158,7 +159,7 @@ var SocketConnection = function (_EventEmitter) {
                 }, 1000);
 
               case 15:
-              case 'end':
+              case "end":
                 return _context2.stop();
             }
           }
@@ -172,7 +173,7 @@ var SocketConnection = function (_EventEmitter) {
       return _initialize;
     }()
   }, {
-    key: 'start',
+    key: "start",
     value: function () {
       var _ref3 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
         var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -186,7 +187,7 @@ var SocketConnection = function (_EventEmitter) {
                 return this._initialize();
 
               case 3:
-              case 'end':
+              case "end":
                 return _context3.stop();
             }
           }
@@ -200,7 +201,7 @@ var SocketConnection = function (_EventEmitter) {
       return start;
     }()
   }, {
-    key: 'stop',
+    key: "stop",
     value: function () {
       var _ref4 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {
         return _regenerator2.default.wrap(function _callee4$(_context4) {
@@ -213,7 +214,7 @@ var SocketConnection = function (_EventEmitter) {
                 return this.socket.stop();
 
               case 3:
-              case 'end':
+              case "end":
                 return _context4.stop();
             }
           }
@@ -227,7 +228,7 @@ var SocketConnection = function (_EventEmitter) {
       return stop;
     }()
   }, {
-    key: 'authenticate',
+    key: "authenticate",
     value: function () {
       var _ref5 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee5(accessToken) {
         var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
@@ -235,14 +236,14 @@ var SocketConnection = function (_EventEmitter) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                this.connection = this.connection + '?authorization=' + accessToken;
+                this.authToken = accessToken;
 
                 /* eslint-disable no-underscore-dangle */
                 _context5.next = 3;
                 return this.start(options);
 
               case 3:
-              case 'end':
+              case "end":
                 return _context5.stop();
             }
           }
@@ -256,7 +257,7 @@ var SocketConnection = function (_EventEmitter) {
       return authenticate;
     }()
   }, {
-    key: 'listen',
+    key: "listen",
     value: function listen(method) {
       var _this3 = this;
 
@@ -267,16 +268,16 @@ var SocketConnection = function (_EventEmitter) {
       })) return;
       this.listened.push(method);
 
-      this.on('init', function () {
+      this.on("init", function () {
         _this3.socket.on(method, function (data) {
-          if (_this3.options.log) console.log({ type: 'receive', method: method, data: data });
+          if (_this3.options.log) console.log({ type: "receive", method: method, data: data });
 
           _this3.emit(method, data);
         });
       });
     }
   }, {
-    key: 'send',
+    key: "send",
     value: function send(methodName) {
       var _this4 = this;
 
@@ -284,7 +285,7 @@ var SocketConnection = function (_EventEmitter) {
         args[_key - 1] = arguments[_key];
       }
 
-      if (this.options.log) console.log({ type: 'send', methodName: methodName, args: args });
+      if (this.options.log) console.log({ type: "send", methodName: methodName, args: args });
       if (this.offline) return;
 
       if (this.socket) {
@@ -294,14 +295,14 @@ var SocketConnection = function (_EventEmitter) {
         return;
       }
 
-      this.once('init', function () {
+      this.once("init", function () {
         var _socket2;
 
         return (_socket2 = _this4.socket).send.apply(_socket2, [methodName].concat(args));
       });
     }
   }, {
-    key: 'invoke',
+    key: "invoke",
     value: function () {
       var _ref6 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee7(methodName) {
         var _this5 = this;
@@ -316,14 +317,14 @@ var SocketConnection = function (_EventEmitter) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                if (this.options.log) console.log({ type: 'invoke', methodName: methodName, args: args });
+                if (this.options.log) console.log({ type: "invoke", methodName: methodName, args: args });
 
                 if (!this.offline) {
                   _context7.next = 3;
                   break;
                 }
 
-                return _context7.abrupt('return', false);
+                return _context7.abrupt("return", false);
 
               case 3:
                 if (!this.socket) {
@@ -331,23 +332,23 @@ var SocketConnection = function (_EventEmitter) {
                   break;
                 }
 
-                return _context7.abrupt('return', (_socket3 = this.socket).invoke.apply(_socket3, [methodName].concat((0, _toConsumableArray3.default)(args))));
+                return _context7.abrupt("return", (_socket3 = this.socket).invoke.apply(_socket3, [methodName].concat((0, _toConsumableArray3.default)(args))));
 
               case 5:
-                return _context7.abrupt('return', new _promise2.default(function () {
+                return _context7.abrupt("return", new _promise2.default(function () {
                   var _ref7 = (0, _asyncToGenerator3.default)( /*#__PURE__*/_regenerator2.default.mark(function _callee6(resolve) {
                     return _regenerator2.default.wrap(function _callee6$(_context6) {
                       while (1) {
                         switch (_context6.prev = _context6.next) {
                           case 0:
-                            return _context6.abrupt('return', _this5.once('init', function () {
+                            return _context6.abrupt("return", _this5.once("init", function () {
                               var _socket4;
 
                               return resolve((_socket4 = _this5.socket).invoke.apply(_socket4, [methodName].concat((0, _toConsumableArray3.default)(args))));
                             }));
 
                           case 1:
-                          case 'end':
+                          case "end":
                             return _context6.stop();
                         }
                       }
@@ -360,7 +361,7 @@ var SocketConnection = function (_EventEmitter) {
                 }()));
 
               case 6:
-              case 'end':
+              case "end":
                 return _context7.stop();
             }
           }
@@ -378,12 +379,12 @@ var SocketConnection = function (_EventEmitter) {
 }(EventEmitter);
 
 if (!SignalR) {
-  throw new Error('[Vue-SignalR] Cannot locate signalr-client');
+  throw new Error("[Vue-SignalR] Cannot locate signalr-client");
 }
 
 function install(Vue, connection) {
   if (!connection) {
-    throw new Error('[Vue-SignalR] Cannot locate connection');
+    throw new Error("[Vue-SignalR] Cannot locate connection");
   }
 
   var Socket = new SocketConnection(connection);
@@ -391,13 +392,11 @@ function install(Vue, connection) {
   Vue.socket = Socket;
 
   (0, _defineProperties2.default)(Vue.prototype, {
-
     $socket: {
       get: function get() {
         return Socket;
       }
     }
-
   });
 
   Vue.mixin({
@@ -417,9 +416,9 @@ function install(Vue, connection) {
       }
 
       if (this.$options.subscribe) {
-        Socket.on('authenticated', function () {
+        Socket.on("authenticated", function () {
           _this6.$options.subscribe.forEach(function (channel) {
-            Socket.invoke('join', channel);
+            Socket.invoke("join", channel);
           });
         });
       }

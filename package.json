@@ -1,6 +1,6 @@
 {
   "name": "@kerrpeter/vue-signalr",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Signalr client for vue js",
   "main": "dist/vue-signalr.js",
   "files": [
@@ -10,7 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src/index.js --out-file dist/vue-signalr.js",
-    "run": "node dist/vue-signalr.js"
+    "run": "node dist/vue-signalr.js",
+    "publish": "npm init && babel src/index.js --out-file dist/vue-signalr.js && npm publish --access public"
   },
   "repository": {
     "type": "git",
