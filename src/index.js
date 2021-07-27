@@ -46,7 +46,7 @@ class SocketConnection extends EventEmitter {
       this._isMounted = true;
       this.emit('init');
     } catch (error) {
-      if (this.options.log) console.log('Error, reconnecting...');
+      if (this.options.log) console.log("Error: ", error, "Reconnecting...");
 
       setTimeout(() => {
         this._initialize(con);
